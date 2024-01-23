@@ -25,3 +25,6 @@
 *.pyc
 *.pyo
 *.pyd
+
+# En tiiä mikä tää on mut haluun sen pois
+*.DS_Store
