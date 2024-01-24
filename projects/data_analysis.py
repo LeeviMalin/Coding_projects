@@ -1,3 +1,7 @@
+'''
+Ohjelma kandin tulosten laskemista varten. 
+'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,8 +12,8 @@ import seaborn as sns
 import tretsa
 from matplotlib.patches import Ellipse
 from scipy.stats import gaussian_kde
-import tretsa_utils
-import hrv_analysis
+#import tretsa_utils # tutkimusryhmän kirjato
+#import hrv_analysis # tutkimusryhmän kirjasto 
 import astropy
 import mpl_scatter_density # adds projection='scatter_density'
 import wfdb
@@ -100,20 +104,6 @@ def periaate_poinacre():
     
 
 def plot_poincare(num):
-    #s20071.1
-    '''
-    rrnonst = analyse_all_files_in_folder('/Users/leevimalin/Library/Mobile Documents/com~apple~CloudDocs/Opinnot/Kandi/min500nonst/', num)
-    rrh = analyse_all_files_in_folder('/Users/leevimalin/Library/Mobile Documents/com~apple~CloudDocs/Opinnot/Kandi/min500_nsrdb/', num)
-    rr_n_nonst = np.array(rrnonst[:-1])
-    rr_n1_nonst = np.array(rrnonst[1:])
-    rr_nh = np.array(rrh[:-1])
-    rr_n1h = np.array(rrh[1:])
-    sd1nonst = float(np.std(np.subtract(rr_n_nonst, rr_n1_nonst) / np.sqrt(2)))
-    sd2nonst = float(np.std(np.add(rr_n_nonst, rr_n1_nonst) / np.sqrt(2)))
-    sd1h = float(np.std(np.subtract(rr_nh, rr_n1h) / np.sqrt(2)))
-    sd2h = float(np.std(np.add(rr_nh, rr_n1h) / np.sqrt(2)))
-    '''
-    #st
     rrst = analyse_all_files_in_folder('/Users/leevimalin/Library/Mobile Documents/com~apple~CloudDocs/Opinnot/Kandi/min500nonst/',num)
     rrnonst = analyse_all_files_in_folder('/Users/leevimalin/Library/Mobile Documents/com~apple~CloudDocs/Opinnot/Kandi/min500_nsrdb/',num)
 
@@ -318,6 +308,7 @@ def hrv_series(num):
 
 def dfa_alpha1(rr: typing.Union[np.ndarray, list], dfa_order: int = 2) -> float:
     """
+    Tutkimusryhmän koodia
     Calculate DFA alpha1 in maximally overlapping windows
     Parameters
     ----------
@@ -344,6 +335,7 @@ def dfa_alpha1(rr: typing.Union[np.ndarray, list], dfa_order: int = 2) -> float:
 
 def dfa_alpha2(rr: typing.Union[np.ndarray, list], dfa_order: int = 2) -> float:
     """
+    Tutkimusryhmän koodia
     Calculate DFA alpha1 in maximally overlapping windows
     Parameters
     ----------
@@ -371,6 +363,7 @@ def dfa_alpha2(rr: typing.Union[np.ndarray, list], dfa_order: int = 2) -> float:
 
 def ordinary_dfa_alpha1(data: np.ndarray) -> float:
     """
+    Tutkimusryhmän koodia
     Calculate ordinary DFA alpha1
     Parameters
     ----------
@@ -394,6 +387,7 @@ def ordinary_dfa_alpha1(data: np.ndarray) -> float:
 
 def ordinary_dfa_alpha2(data: np.ndarray) -> float:
     """
+    Tutkimusryhmän koodia
     Calculate ordinary DFA alpha2
     Parameters
     ----------
@@ -418,6 +412,7 @@ def ordinary_dfa_alpha2(data: np.ndarray) -> float:
 
 def read_st_data(path: str):
     """
+    Tutkimusryhmän koodia
     Lukee csv tiedoston pandan dataframeen (vähä niinku Pythonin Excel,
     taulokkumuotoisen datan käsittelyyn tarkoitettu siis)
     Parameters
@@ -612,6 +607,7 @@ def analyse_all_files_in_folder(folder_path, num):
 
 def compute_time_domain_measures(rri: typing.Union[np.ndarray, list]) -> dict:
     """
+    Tutkimusryhmän koodia
     Compute basic HRV measures from np.array into pandas dataframe
     Parameters
     ----------
