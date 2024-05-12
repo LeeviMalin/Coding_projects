@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 import sklearn as skl
 import sklearn.linear_model as skl_lm
 import sklearn.metrics as skl_m
+import jinja2
 from scipy import stats
 from time import perf_counter
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 
@@ -35,7 +36,7 @@ NEWSGROUPTRANSFORMER = {
     }
 
 def makeSave(name: str):
-    '''Saves current plot to given location'''
+    '''Saves latest plot to given location'''
     plt.savefig("/Users/leevimalin/Library/Mobile Documents/com~apple~CloudDocs/Opinnot/Ohjelmointi/Python projects/Project/plots/"+name+".pdf")
 
 #**********
@@ -77,11 +78,19 @@ def part2(df, group1: int, group2: int):
     lgwordCount2 = np.log10(wordCount2, out=np.zeros_like(wordCount2), where=(wordCount2!=0))
 
     plt.figure(figsize=(20,15))
-    plt.hist(lgwordCount1,80)
-    makeSave("part2hist1")
+    plt.hist(lgwordCount1,40)
+    if group1 == 10:
+        makeSave("part2hist1")
+    else:
+        makeSave("part2hist3")
+    plt.close()
+
     plt.figure(figsize=(20,15))
-    plt.hist(lgwordCount2,80)
-    makeSave("part2hist2")
+    plt.hist(lgwordCount2,40)
+    if group1 == 10:
+        makeSave("part2hist2")
+    else:
+        makeSave("part2hist4")
     plt.close()
 
     tTesti = stats.ttest_ind(wordCount1,wordCount2)
@@ -146,6 +155,7 @@ def part5(df):
     corValues = stats.normaltest(sentValues)
 
     sentList, statList = calculatePart5(df)
+    
     meanList = takeFirstFromDict(statList)
     sortedList = sorted(meanList)
     three_lowest = sortedList[:3]
@@ -167,7 +177,7 @@ def part5(df):
 
     part5results = {
         "correlation of sentiment" : corValues,
-        "Sentimenttien jakauma" : statList,
+        "Sentimenttien jakauma" : pd.DataFrame(statList),
         "Kolme suurinta" : three_highest,
         "Kolme pienintä" : three_lowest,
         "pc ja mac ero" : diff1,
@@ -219,8 +229,11 @@ def makeNewPredict(df, words: list[str], target):
 
     return mse
 
-def tensorThings(df):
-    '''Calculates part 6 things with tensor flow'''
+def tensorPart6(df):
+    '''
+    Calculates part 6 things with tensor flow
+    returns mean squared error and evaluation results
+    '''
     # Select the data we need in this part
     partdata = df.loc[(df["groupID"] == 2) | (df["groupID"] == 15)]
     target = partdata['groupID'].apply(lambda x: 1 if x == 2 else 0)
@@ -239,11 +252,29 @@ def tensorThings(df):
     y_hat = model.predict(X_test)
     mse = skl_m.mean_squared_error(y_test, y_hat)
 
-
-
     eval = model.evaluate(X_test, y_test, batch_size=32)
 
     return mse, eval
+
+def makePrint(results: dict):
+    '''Prints results of the calculations'''
+    for key in results:
+        print(key)
+        # convert part 1 and part 5 results to latex
+        if key == "Part1 results":
+            for df in results[key]:
+                print(df.to_latex())
+        elif key == "Part5 results":
+            for member in results[key]:
+                if member == "Sentimenttien jakauma":
+                    print(results[key][member].to_latex())
+                else:
+                    print(member, results[key][member])
+
+        # print normal if not part 1 or part 5
+        else:
+            print(results[key])
+        print()
 
 def calculatePart1(df,word: str,groups: list) -> list:
     '''
@@ -360,7 +391,7 @@ def main():
 
     data = pd.read_csv("/Users/leevimalin/Library/Mobile Documents/com~apple~CloudDocs/Opinnot/Ohjelmointi/Python projects/Project/harjoitustyodata.csv")
 
-    '''
+
     results = {
         "Part1 results" : part1(data),
         "Part2 results1" : part2(data,10,11),
@@ -368,11 +399,11 @@ def main():
         "Part3 results" : part3(data),
         "Part4 results" : allPart4(data),
         "Part5 results" : part5(data),
-        "Part6 results" : part6(data)
+        "Part6 results" : part6(data),
+        "Part6 tensor results" : tensorPart6(data)
     }
-    '''
 
-    mse, eval = tensorThings(data)
+    makePrint(results)
 
     T2 = perf_counter()
     print()
