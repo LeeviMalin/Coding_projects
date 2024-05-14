@@ -3,6 +3,8 @@
 *.out
 *.app
 
+*.csv
+
 # Qt project file
 *.pro.user
 
